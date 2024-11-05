@@ -27,7 +27,12 @@ app.post('/scrape', async (req, res) => {
   };
 
   try {
-    const browser = await puppeteer.launch({ headless: false, timeout: 60000 });
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/google-chrome-stable', // Caminho para o Chrome no Render
+      headless: true,  // Rodando no modo headless
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
     const page = await browser.newPage();
     await page.goto(urlDePesquisa);
     await page.waitForSelector("#searchboxinput", { visible: true });
