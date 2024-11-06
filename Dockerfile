@@ -1,25 +1,22 @@
 # Use uma imagem base do Node.js
 FROM node:18-slim
 
-# Instala as dependências do Chromium
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libgdk-pixbuf2.0-0 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
     libxss1 \
-    libgdk-pixbuf2.0-0 \
-    libgbm1 \
-    libasound2 \
     libx11-xcb1 \
     libxtst6 \
-    libnss3-dev \
+    libasound2 \
     ca-certificates \
     fonts-liberation \
     libappindicator3-1 \
     libx11-xcb-dev \
-    google-chrome-stable \
-    && apt-get clean
+    --no-install-recommends && apt-get clean
+
+RUN npm install puppeteer
 
 # Configura o diretório de trabalho
 WORKDIR /app
