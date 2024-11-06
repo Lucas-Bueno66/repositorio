@@ -1,6 +1,7 @@
 # Use uma imagem base do Node.js
 FROM node:18-slim
 
+# Instalar dependências do sistema necessárias para o Puppeteer
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libgdk-pixbuf2.0-0 \
@@ -16,7 +17,8 @@ RUN apt-get update && apt-get install -y \
     libx11-xcb-dev \
     --no-install-recommends && apt-get clean
 
-RUN npm install puppeteer
+# Limpar cache do npm para evitar problemas
+RUN npm cache clean --force
 
 # Configura o diretório de trabalho
 WORKDIR /app
@@ -24,7 +26,7 @@ WORKDIR /app
 # Copia o package.json e package-lock.json para o diretório do container
 COPY package.json package-lock.json ./
 
-# Instala as dependências do projeto
+# Instala as dependências do projeto (incluindo o Puppeteer)
 RUN npm install
 
 # Copia o restante dos arquivos do projeto
