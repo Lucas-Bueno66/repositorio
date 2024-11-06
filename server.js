@@ -28,10 +28,11 @@ app.post('/scrape', async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      executablePath: '/usr/bin/google-chrome-stable', // Caminho para o Chrome no Render
-      headless: true,  // Rodando no modo headless
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      headless: true,  // Mantém o modo headless
+      executablePath: '/usr/bin/google-chrome-stable',
+      timeout: 60000
     });
+    
     
     const page = await browser.newPage();
     await page.goto(urlDePesquisa);
