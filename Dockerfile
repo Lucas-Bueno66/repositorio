@@ -1,7 +1,7 @@
 # Use uma imagem base do Node.js
 FROM node:18-slim
 
-# Atualiza e instala as dependências necessárias para o Puppeteer
+# Atualiza e instala as dependências necessárias para o Puppeteer e Chromium
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -20,14 +20,14 @@ RUN apt-get update && apt-get install -y \
     libxcomposite1 \
     libxrandr2 \
     libgbm1 \
+    chromium \
     --no-install-recommends && apt-get clean
-
 
 # Configura o diretório de trabalho
 WORKDIR /app
 
 # Copia o package.json e package-lock.json para o diretório do container
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json ./ 
 
 # Limpa o cache do npm
 RUN rm -rf /root/.npm
@@ -41,8 +41,8 @@ RUN npm install puppeteer
 # Copia o restante dos arquivos do projeto
 COPY . .
 
-# Expõe a porta 3000
-EXPOSE 3000
+# Expõe a porta 10000
+EXPOSE 10000
 
 # Comando para rodar o servidor
 CMD ["node", "server.js"]
