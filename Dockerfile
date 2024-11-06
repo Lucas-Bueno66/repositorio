@@ -1,7 +1,7 @@
 # Use uma imagem base do Node.js
 FROM node:18-slim
 
-# Instala dependências do sistema necessárias para o Chromium
+# Instalar dependências do sistema necessárias para o Chromium
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libgdk-pixbuf2.0-0 \
@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     libdrm2 \
     libgbm1 \
     --no-install-recommends && apt-get clean
+
+# Limpar o cache do npm para evitar dependências corrompidas
+RUN npm cache clean --force
 
 # Instala o Puppeteer
 RUN npm install puppeteer
