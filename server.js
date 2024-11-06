@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 const cors = require('cors'); // Importa o middleware CORS
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 // Habilita o CORS para todas as requisições
 app.use(cors({
