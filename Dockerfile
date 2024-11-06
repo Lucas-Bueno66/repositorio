@@ -1,7 +1,7 @@
 # Use uma imagem base do Node.js
 FROM node:18-slim
 
-# Instalar dependências do sistema necessárias para o Chromium
+# Atualiza e instala as dependências necessárias para o Puppeteer
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libgdk-pixbuf2.0-0 \
@@ -15,25 +15,27 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     libappindicator3-1 \
     libx11-xcb-dev \
-    chromium \
-    libdrm2 \
-    libgbm1 \
     --no-install-recommends && apt-get clean
-
-# Limpar o cache do npm para evitar dependências corrompidas
-RUN npm cache clean --force
-
-# Instala o Puppeteer
-RUN npm install puppeteer
 
 # Configura o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos para o container
+# Copia o package.json e package-lock.json para o diretório do container
 COPY package.json package-lock.json ./
-RUN npm install
-COPY . ./
 
+# Limpa o cache do npm
+RUN rm -rf /root/.npm
+
+# Instala as dependências do projeto
+RUN npm install
+
+# Instala o Puppeteer
+RUN npm install puppeteer
+
+# Copia o restante dos arquivos do projeto
+COPY . .
+
+# Expõe a porta 3000
 EXPOSE 3000
 
 # Comando para rodar o servidor
