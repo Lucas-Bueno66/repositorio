@@ -3,19 +3,25 @@ FROM node:18-slim
 
 # Atualiza e instala as dependências necessárias para o Puppeteer
 RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates \
     libnss3 \
+    libx11-xcb1 \
+    libxss1 \
     libgdk-pixbuf2.0-0 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
-    libxss1 \
-    libx11-xcb1 \
-    libxtst6 \
+    libx11-xcb-dev \
     libasound2 \
-    ca-certificates \
+    libdrm2 \
     fonts-liberation \
     libappindicator3-1 \
-    libx11-xcb-dev \
+    libxtst6 \
+    libxcomposite1 \
+    libxrandr2 \
+    libgbm1 \
     --no-install-recommends && apt-get clean
+
 
 # Configura o diretório de trabalho
 WORKDIR /app

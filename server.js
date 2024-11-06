@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 const cors = require('cors'); // Importa o middleware CORS
 
 const app = express();
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 3000;
 
 // Habilita o CORS para todas as requisições
 app.use(cors({
@@ -27,6 +27,7 @@ app.post('/scrape', async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
+      executablePath: 'C:\\Users\\lpass\\.cache\\puppeteer\\chrome\\win64-130.0.6723.91\\chrome-win64\\chrome.exe',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
