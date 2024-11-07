@@ -1,19 +1,33 @@
+const express = require('express');
+const fs = require('fs');
+const puppeteer = require('puppeteer');
+const cors = require('cors'); // Importa o middleware CORS
+
+// Inicializa o Express
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Habilita o CORS para todas as requisições
+app.use(cors({
+  origin: '*', // Permitindo todas as origens
+  methods: ['GET', 'POST'], // Permitindo apenas métodos necessários
+  allowedHeaders: ['Content-Type']
+}));
+
+app.use(express.json());
+
+// Define o endpoint /scrape para realizar o scraping
 app.post('/scrape', async (req, res) => {
   const { segmento, cidade, estado } = req.body;
   const urlDePesquisa = "https://www.google.com.br/maps";
   const results = [];
 
-  // Função para atualizar o resultado no frontend em tempo real
+  // Função para atualizar o resultado no frontend
   const updateResults = (message) => {
     results.push(message);
-    res.write(`data: ${JSON.stringify({ message })}\n\n`);
   };
 
   try {
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
@@ -77,11 +91,14 @@ app.post('/scrape', async (req, res) => {
     fs.writeFileSync("results.json", JSON.stringify(uniqueResults, null, 2));
     updateResults(`Número de locais encontrados: ${uniqueResults.length}`);
     await browser.close();
-
-    res.write(`data: ${JSON.stringify({ message: "Finalizado com sucesso!" })}\n\n`);
-    res.end();
+    res.json(uniqueResults);
   } catch (error) {
     console.log("Erro:", error);
     res.status(500).json({ error: "Erro ao realizar a raspagem." });
   }
+});
+
+// Inicia o servidor
+app.listen(port, () => {
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });
