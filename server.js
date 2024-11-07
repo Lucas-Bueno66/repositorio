@@ -20,7 +20,10 @@ app.post('/scrape', async (req, res) => {
   };
 
   try {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({    
+       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+       timeout: 60000
+      });
     const page = await browser.newPage();
     updateResults('acessando url')
     await page.goto(urlDePesquisa);
