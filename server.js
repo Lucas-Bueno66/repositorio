@@ -22,13 +22,15 @@ app.post('/scrape', async (req, res) => {
   try {
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
+    updateResults('acessando url')
     await page.goto(urlDePesquisa);
-    await page.waitForSelector("#searchboxinput", { visible: true });
+    await page.waitForSelector("#searchboxinput", { visible: true, timeout: 60000 });
 
     updateResults(`Iniciando a pesquisa por ${segmento} em ${cidade}, ${estado}...`);
     await page.type("#searchboxinput", `todas ${segmento} em, ${cidade}, ${estado}`);
     await page.click("#searchbox-searchbutton > span");
     await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 1.5 });
+    updateResults('localizando div role feed')
     await page.waitForSelector('div[role="feed"]', { visible: true, timeout: 60000 });
 
     const links = await page.$$('div[role="feed"] > div:nth-child(odd) > [jsaction] a:not(.bm892c):not(.A1zNzb)');
@@ -41,6 +43,7 @@ app.post('/scrape', async (req, res) => {
       await link.click();
 
       try {
+        updateResults('localizando dados da empresa')
         await page.waitForSelector('button[aria-label^="Salvar"]', { visible: true, timeout: 30000 });
       } catch (error) {
         updateResults(`Erro ao encontrar botão Salvar na empresa ${i + 1}: ${error}. Continuando...`);
