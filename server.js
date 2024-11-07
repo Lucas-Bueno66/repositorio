@@ -28,15 +28,12 @@ app.post('/scrape', async (req, res) => {
     updateResults('acessando url')
     await page.goto(urlDePesquisa);
     await page.waitForSelector("#searchboxinput", { visible: true, timeout: 60000 });
-      
-    await page.screenshot({ path: path.join(screenshotsDir, 'step1.png') });//
 
     updateResults(`Iniciando a pesquisa por ${segmento} em ${cidade}, ${estado}...`);
     await page.type("#searchboxinput", `todas ${segmento} em, ${cidade}, ${estado}`);
     await page.click("#searchbox-searchbutton > span");
     await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 1.5 });
     updateResults('localizando div role feed')
-    await page.screenshot({ path: path.join(screenshotsDir, 'step2.png') });
     await page.waitForSelector('div[role="feed"]', { visible: true, timeout: 60000 });
 
     const links = await page.$$('div[role="feed"] > div:nth-child(odd) > [jsaction] a:not(.bm892c):not(.A1zNzb)');
